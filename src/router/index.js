@@ -1,5 +1,4 @@
-import { createRouter } from 'vue-router'
-
+import { createRouter, createWebHashHistory } from 'vue-router'
 /* 基本布局 */
 import Layout from '@/layout'
 /**
@@ -170,8 +169,17 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 const router = createRouter({
-  // history: createWebHashHistory(),
+  history: createWebHashHistory(), // hash模式
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
+console.log(router);
+export function resetRouter() {
+  const newRouter = createRouter({
+    history: createWebHashHistory(),
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
+  router.matcher = newRouter.matcher // reset router
+}
 export default router

@@ -1,6 +1,6 @@
 import router from '../router' // 引入路由
 import store from '../store' // 引入vuex
-import { Message } from 'element-plus' // 引入element-plus提示组件
+import { ElMessage } from 'element-plus' // 引入element-plus提示组件
 import NProgress from 'nprogress' // 过渡动画
 import 'nprogress/nprogress.css' // 过度动画样式
 import { getToken } from '@/utils/auth' // 从cookie中获取token
@@ -48,7 +48,7 @@ router.beforeEach(async(to, from, next) => {
         } catch (error) {
           // 删除token，进入登录页面重新登录
           await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
+          ElMessage.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done() // 关闭过度动画
         }
