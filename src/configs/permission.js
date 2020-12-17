@@ -32,20 +32,21 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
+          
           // 获取用户信息
           // 注意:角色必须是对象数组!例如:['admin']或，['developer'，'editor']
           const { roles } = await store.dispatch('user/getInfo')
 
           // 根据角色生成可访问的路由表
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
           // 动态添加可访问路由
-          router.addRoutes(accessRoutes)
+          router.addRoute(accessRoutes)
 
           // hack方法以确保addRoutes是完整的
           // 设置replace: true，这样导航就不会留下历史记录
           next({ ...to, replace: true })
         } catch (error) {
+
           // 删除token，进入登录页面重新登录
           await store.dispatch('user/resetToken')
           ElMessage.error(error || 'Has Error')

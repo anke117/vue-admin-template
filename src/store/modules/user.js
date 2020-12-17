@@ -32,7 +32,7 @@ const mutations = {
 }
 
 const actions = {
-  // user login
+  // 用户登录
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
@@ -42,12 +42,13 @@ const actions = {
         setToken(data.token)
         resolve()
       }).catch(error => {
+        console.log(error);
         reject(error)
       })
     })
   },
 
-  // get user info
+  // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {

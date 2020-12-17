@@ -3,49 +3,40 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-// create an axios instance
+// 创建 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  withCredentials: true, // 当跨域请求时发送 cookie
+  timeout: 5000 // 请求超时（request timeout）
 })
 
-// request interceptor
+// 请求拦截器 (request interceptor)
 service.interceptors.request.use(
   config => {
-    // do something before request is sent
+    // 请求之前
 
     if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
+      // 让每个请求携带token，['X-Token']是自定义headers key，请根据实际情况修改
       config.headers['X-Token'] = getToken()
     }
     return config
   },
   error => {
-    // do something with request error
+    // 请求报错 
     console.log(error) // for debug
     return Promise.reject(error)
   }
 )
 
-// response interceptor
+// 响应拦截器 (response interceptor)
 service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
+  // 如果您想获得http信息，如头或状态，请 return  response => response
 
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
+  // 通过自定义状态码确定请求状态，这里只是一个例子，你也可以通过HTTP状态码判断状态
   response => {
     const res = response.data
 
-    // if the custom code is not 20000, it is judged as an error.
+    // 如果自定义状态码不是20000，则判断为错误。
     if (res.code !== 20000) {
       ElMessage({
         message: res.message || 'Error',
@@ -53,9 +44,9 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
+      // 50008: 非法token; 50012: 已登录其他客户; 50014: token过期;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
+        // 重新登录
         ElMessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',

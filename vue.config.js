@@ -4,13 +4,29 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 const defaultSettings = require('./src/configs/settings.js')
-const name = defaultSettings.title || 'vue Admin Template' // page title
+
+const name = defaultSettings.title // 页面标题
+
+// 如果你的端口设置为80，使用管理员权限执行命令行。例如，Mac: sudo npm运行，你可以通过以下方法改变端口: npm run dev或者npm run dev --port = 9528
+const port = process.env.port || process.env.npm_config_port || 9090 // 开发端口
+
+// 所有配置项说明都可以在 https://cli.vuejs.org/config/ 中找到
 module.exports = {
+  publicPath: '/',
+  outputDir: 'dist',
   assetsDir: 'static',
   productionSourceMap: false,
+  devServer: {
+    port: port,
+    open: true,
+    overlay: {
+      warnings: false,
+      errors: true
+    },
+    before: require('./mock/mock-server.js')
+  },
   configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
+    // 在webpack的name字段中提供应用程序的标题，这样可以在index.html中访问它以注入正确的标题。
     name: name,
     resolve: {
       alias: {
@@ -19,11 +35,11 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    // it can improve the speed of the first screen, it is recommended to turn on preload
+    // 这样可以提高初屏速度，建议打开预加载
     config.plugin('preload').tap(() => [
       {
         rel: 'preload',
-        // to ignore runtime.js
+        // 忽略runtime.js
         // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
         fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
         include: 'initial'

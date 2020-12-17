@@ -173,7 +173,6 @@ const router = createRouter({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
-console.log(router);
 export function resetRouter() {
   const newRouter = createRouter({
     history: createWebHashHistory(),
