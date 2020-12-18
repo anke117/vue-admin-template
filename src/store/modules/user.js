@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, getPermissionList } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -7,7 +7,8 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    userId: ""
   }
 }
 
@@ -28,6 +29,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USER_ID: (state, userId) => {
+    state.userId = userId
   }
 }
 
@@ -36,13 +40,17 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      const param = {
+        body: { userName: username.trim(), password: password }
+      }
+      login(param).then(response => {
+        console.log(response);
+        const { token, id } = response
+        commit('SET_TOKEN', token)
+        commit('SET_USER_ID', id)
+        setToken(token)
         resolve()
       }).catch(error => {
-        console.log(error);
         reject(error)
       })
     })
@@ -51,14 +59,13 @@ const actions = {
   // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+      getInfo(state.userId).then(response => {
+        const { userName, roles } = response
 
-        if (!data) {
-          reject('Verification failed, please Login again.')
+        if (!userName) {
+          reject('校验失败，请重新登录')
         }
 
-        const { roles, name, avatar } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -66,15 +73,25 @@ const actions = {
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
+        commit('SET_NAME', userName)
+        // commit('SET_AVATAR', avatar)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
     })
   },
 
+  // 获取后台返回的权限信息
+  getPermissionList() {
+    return new Promise((resolve, reject) => {
+      getPermissionList().then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {

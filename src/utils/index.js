@@ -1,3 +1,4 @@
+import Layout from '@/layout'
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time

@@ -23,7 +23,7 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // 在webpack的name字段中提供应用程序的标题，这样可以在index.html中访问它以注入正确的标题。
