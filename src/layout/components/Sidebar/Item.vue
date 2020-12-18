@@ -1,35 +1,39 @@
+<template>
+<div>
+
+  <component v-bind:is="formatIcon()" v-bind="$attrs" />
+</div>
+</template>
 <script>
 export default {
-  name: 'MenuItem',
-  functional: true,
+  name: "MenuItem",
   props: {
     icon: {
       type: String,
-      default: ''
+      default: ""
     },
     title: {
       type: String,
-      default: ''
+      default: ""
     }
   },
-  render(h, context) {
-    const { icon, title } = context.props
-    const vnodes = []
-
-    if (icon) {
-      if (icon.includes('el-icon')) {
-        vnodes.push(<i class={[icon, 'sub-el-icon']} />)
-      } else {
-        vnodes.push(<svg-icon icon-class={icon}/>)
+  methods: {
+    formatIcon() {
+      const vnodes = [];
+      if (this.icon) {
+        if (this.icon.includes("el-icon")) {
+          vnodes.push(<i class={[this.icon, "sub-el-icon"]} />);
+        } else {
+          vnodes.push(<svg-icon icon-class={this.icon} />);
+        }
       }
+      if (this.title) {
+        vnodes.push(<span slot="title">{this.title}</span>);
+      }
+      return vnodes;
     }
-
-    if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
-    }
-    return vnodes
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

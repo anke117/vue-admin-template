@@ -7,7 +7,7 @@ const defaultSettings = require('./src/configs/settings.js')
 
 const name = defaultSettings.title // 页面标题
 
-// 如果你的端口设置为80，使用管理员权限执行命令行。例如，Mac: sudo npm运行，你可以通过以下方法改变端口: npm run dev或者npm run dev --port = 9528
+// 如果你的端口设置为80，使用管理员权限执行命令行。例如，Mac: sudo npm运行，你可以通过以下方法改变端口: yarn serve或者yarn serve --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9090 // 开发端口
 
 // 所有配置项说明都可以在 https://cli.vuejs.org/config/ 中找到
