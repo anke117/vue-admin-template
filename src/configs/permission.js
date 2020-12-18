@@ -39,6 +39,7 @@ router.beforeEach(async(to, from, next) => {
 
           // 根据角色生成可访问的路由表
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          
           // 动态添加可访问路由
           router.addRoute(accessRoutes)
 

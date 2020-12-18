@@ -6,6 +6,7 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param route
  */
 function hasPermission(roles, route) {
+  console.log(route);
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
   } else {
@@ -14,7 +15,7 @@ function hasPermission(roles, route) {
 }
 
 /**
- * Filter asynchronous routing tables by recursion
+ * 通过递归过滤异步路由表
  * @param routes asyncRoutes
  * @param roles
  */
@@ -55,6 +56,7 @@ const actions = {
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
+      console.log(accessedRoutes);
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

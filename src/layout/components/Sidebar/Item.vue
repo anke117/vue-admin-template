@@ -1,9 +1,11 @@
 <template>
-<div>
-
-  <component v-bind:is="formatIcon()" v-bind="$attrs" />
-</div>
+  <div>
+    <i v-if="isElIcon" :class="icon" class="sub-el-icon" />
+    <svg-icon v-else :icon-class="icon" />
+    <slot v-if="title" name="title">{{ title }}</slot>
+  </div>
 </template>
+
 <script>
 export default {
   name: "MenuItem",
@@ -17,22 +19,11 @@ export default {
       default: ""
     }
   },
-  methods: {
-    formatIcon() {
-      const vnodes = [];
-      if (this.icon) {
-        if (this.icon.includes("el-icon")) {
-          vnodes.push(<i class={[this.icon, "sub-el-icon"]} />);
-        } else {
-          vnodes.push(<svg-icon icon-class={this.icon} />);
-        }
-      }
-      if (this.title) {
-        vnodes.push(<span slot="title">{this.title}</span>);
-      }
-      return vnodes;
+  computed: {
+    isElIcon() {
+      return this.icon.includes("el-icon") ? true : false;
     }
-  },
+  }
 };
 </script>
 
